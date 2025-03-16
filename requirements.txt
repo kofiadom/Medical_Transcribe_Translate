@@ -6,6 +6,5 @@ starlette
 aiohttp
 websockets
 python-dotenv
-pyaudio
 openai
 elevenlabs
