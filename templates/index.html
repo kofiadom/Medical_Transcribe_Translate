@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Transcription Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>🎙️ Nao Medical Transcription</h1>
+    </div>
+
+    <div class="container">
+        <div class="controls">
+            <button id="toggle-btn" class="mic-off">🎙️ Start Recording</button>
+        </div>
+
+        <div class="transcript-container">
+            <div class="transcript-box">
+                <h2>Real-Time Transcript</h2>
+
+                <select id="language-select">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="de">German</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ar">Arabic</option>
+                </select>
+                <pre id="transcript-text"></pre>
+                
+            </div>
+
+            <div class="transcript-box">
+                <h2>Translated Transcript</h2>
+                <select id="language-select">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="de">German</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ar">Arabic</option>
+                </select>
+                <pre id="translated-text"></pre>
+                <audio id="translated-audio" controls></audio>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8000/ws");
+        const toggleBtn = document.getElementById('toggle-btn');
+        const transcriptText = document.getElementById('transcript-text');
+        const translatedText = document.getElementById('translated-text');
+        const languageSelect = document.getElementById('language-select');
+        const inputLanguageSelect = document.getElementById('input-language-select');
+        const translatedAudio = document.getElementById('translated-audio');
+
+
+        let isRecording = false;
+        let analyzedText = '';
+        let translatedTextContent = '';
+
+        toggleBtn.addEventListener('click', () => {
+            isRecording = !isRecording;
+            toggleBtn.textContent = isRecording ? "🛑 Stop Recording" : "🎤 Start Recording";
+            toggleBtn.classList.toggle('mic-on', isRecording);
+            toggleBtn.classList.toggle('mic-off', !isRecording);
+            
+            const inputLanguage = inputLanguageSelect.value;
+            socket.send(JSON.stringify({ action: "toggle_transcription", language: inputLanguage }));
+        });
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'partial_transcript') {
+                transcriptText.innerHTML = analyzedText + data.text;
+            } else if (data.type === 'formatted_transcript') {
+                analyzedText += data.text + "<br>";
+                transcriptText.innerHTML = analyzedText;
+                translateText(data.text, languageSelect.value);
+            } else if (data.type === 'translated_text') {
+                translatedTextContent += data.text + "<br>";
+                translatedText.innerHTML = translatedTextContent;
+                playAudio(data.text);
+            }
+        };
+
+        function translateText(text, targetLang) {
+            socket.send(JSON.stringify({ action: "translate", text: text, language: targetLang }));
+        }
+
+        function playAudio(text) {
+            // Generate audio URL using ElevenLabs API
+            fetch('/generate_audio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                translatedAudio.src = url;
+                translatedAudio.play();
+            })
+            .catch(error => console.error('Error generating audio:', error));
+        }
+
+        languageSelect.addEventListener('change', () => {
+            translatedTextContent = "";
+            translateText(analyzedText, languageSelect.value);
+        });
+
+        socket.onclose = function () {
+            console.error("WebSocket closed unexpectedly");
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+assemblyai
+jinja2
+starlette
+aiohttp
+websockets
+python-dotenv
+pyaudio
+openai
+elevenlabs
