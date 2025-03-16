@@ -3,6 +3,7 @@ from io import BytesIO
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 import assemblyai as aai
 import threading
@@ -25,6 +26,13 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 elevenlabs_api_key = os.getenv("ELEVENLABS_API_KEY")
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET"], 
+    allow_headers=["*"],  
+)
 
 # Setup templates and static files
 templates = Jinja2Templates(directory="templates")
