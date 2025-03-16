@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from starlette.requests import Request
 import assemblyai as aai
 import threading
@@ -185,6 +186,12 @@ async def get_index(request: Request):
     except Exception as e:
         logger.error(f"Error rendering index page: {e}")
         return HTMLResponse(content="An error occurred while rendering the page.", status_code=500)
+    
+
+@app.get("/static/styles.css")
+async def get_static_file():
+    return FileResponse(f"static/styles.css", media_type="text/css")
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
