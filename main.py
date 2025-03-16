@@ -28,7 +28,7 @@ app = FastAPI()
 
 # Setup templates and static files
 templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory=os.path.abspath("static")), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # AssemblyAI configuration
 aai.settings.api_key = assemblyai_api_key
