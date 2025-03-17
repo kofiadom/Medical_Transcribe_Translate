@@ -43,8 +43,8 @@ This file contains the HTML structure for the web interface.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/kofiadom/medscribe-ai.git
-cd medscribe-ai
+git clone https://github.com/kofiadom/Medical_Transcribe_Translate
+cd Medical_Transcribe_Translate
 ```
 
 2. Create a virtual environment and activate it:
