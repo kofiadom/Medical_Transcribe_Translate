@@ -38,7 +38,34 @@ This file contains the CSS styles for the web interface.
 
 This file contains the HTML structure for the web interface.
 
-## Installation
+## AI Tools
+
+This project utilizes several AI tools for various functionalities:
+- **AssemblyAI**: For real-time transcription of medical speech.
+- **OpenAI**: For text analysis and translation.
+- **ElevenLabs**: For generating audio from translated text.
+- **ChatGPT**, **Claude 3.7**, **GitHub Co-pilot** : For coding assistance.
+
+## Reasons for Choosing AI Tools
+
+- **AssemblyAI**: Chosen for its robust real-time transcription capabilities, high accuracy in medical terminology, and ease of integration with FastAPI.
+- **OpenAI**: Selected for its advanced text analysis and translation capabilities, leveraging the power of GPT-4 to ensure precise and context-aware translations.
+- **ElevenLabs**: Preferred for its high-quality text-to-speech generation, providing natural-sounding audio for translated text, and seamless integration with the application.
+
+## Security Considerations
+
+- Ensure that your API keys are stored securely and not exposed in the codebase. Use environment variables to manage sensitive information.
+- Railway ensures HTTPS hosting for secure communication.
+- Regularly update dependencies to patch any security vulnerabilities.
+- Implemented proper error handling to avoid exposing sensitive information in error messages. This includes:
+  - Using try-except blocks to catch exceptions.
+  - Logging errors using `logger.error` without exposing sensitive information.
+  - Returning appropriate HTTP responses with generic error messages.
+
+## Hosting
+
+This application is hosted on Railway.
+
 
 1. Clone the repository:
 
