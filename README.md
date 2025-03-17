@@ -70,6 +70,10 @@ OPENAI_API_KEY=your_openai_api_key
 ELEVENLABS_API_KEY=your_elevenlabs_api_key
 ```
 
+## UI
+
+[![3nykqfp.md.png](https://iili.io/3nykqfp.md.png)](https://freeimage.host/i/3nykqfp)
+
 ## Usage
 
 1. Start the FastAPI server:
